@@ -1,15 +1,16 @@
-from etl.gatherer import get_met_station
-import json
+from etl.extract.api_fetchers import fetch_stations
+import psycopg as psql
+from pathlib import Path
+from etl.helper_functions import file_to_sql
+from etl.init import init_db
+from etl.extract import extract_station
+from postgres_runner import PostgreSQLRunner
 
 if __name__ == "__main__":
-    response = get_met_station()
-    stations = response.json()
-    longitude, latitude = stations['features'][0]['geometry']['coordinates']
-    print(f"Longitude {longitude}, Latitude: {latitude}")
+    config_file = Path('./local_config.ini')
+    query_runner = PostgreSQLRunner(config_file, False)
 
-    data = response.json() if response and response.status_code == 200 else None
-
-    if data:
-        for station in data['features']:
-            print(f"Name: {station['properties']['name']} - StationID: {station['properties']['stationId']}")
-
+    init_db(query_runner, verbose=False)
+    extract_station(query_runner)
+    # transform_station(query_runner)
+    # load_station(query_runner)

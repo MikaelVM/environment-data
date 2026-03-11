@@ -20,3 +20,6 @@ pytest
 # Data Manipulation
 pandas
 pandera[pandas]
+
+# Progress Bar
+rich
