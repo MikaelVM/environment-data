@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from .api_fetchers import fetch_stations
-from postgres_runner import PostgreSQLRunner
+from postgresql_runner import PostgreSQLRunner
 from etl.helper_functions import file_to_sql
 from rich.progress import Progress
 

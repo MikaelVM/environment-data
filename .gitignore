@@ -209,5 +209,8 @@ __marimo__/
 # Ignore .idea/ folder which contains project-specific settings for JetBrains IDEs like PyCharm.
 .idea/
 
-# local_config.ini is a common name for configuration files that contain sensitive information.
-local_config.ini
+# Ignore local configuration files.
+local*.ini
+
+# Ignore temporary files in the temp_data directory.
+temp_data/

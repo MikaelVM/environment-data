@@ -1,4 +1,4 @@
-from postgres_runner import PostgreSQLRunner
+from postgresql_runner import PostgreSQLRunner
 from pathlib import Path
 from etl.helper_functions import file_to_sql, get_sql_files_from_folder
 

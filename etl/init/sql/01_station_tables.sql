@@ -17,7 +17,6 @@ CREATE TABLE IF NOT EXISTS staging_station(
     station_height FLOAT
 );
 
-
 CREATE TABLE IF NOT EXISTS raw_station(
     id SERIAL PRIMARY KEY,
     name VARCHAR(255),

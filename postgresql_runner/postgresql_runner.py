@@ -9,7 +9,7 @@ from psycopg.sql import SQL
 class PostgreSQLRunner:
     """A class for running SQL queries on a PostgreSQL database."""
 
-    def __init__(self, config_file_path: Path, verbose: bool = True) -> None:
+    def __init__(self, config_file_path: Path, *, verbose: bool = True) -> None:
         self.verbose = verbose
         self.connection_string = self._get_connection_string_from_config(config_file_path)
         print("PostgreSQLRunner initialized successfully.") if self.verbose else None
@@ -41,6 +41,11 @@ class PostgreSQLRunner:
         except Exception as e:
             print(f"Error executing query: {e}")
             return False
+
+    def bulk_insert(self, query: SQL, values: list[list[Any]]) -> bool:
+        connection = self._get_postgres_connection()
+        pass
+
 
     def _get_postgres_connection(self) -> Connection:
         """Establishes a connection to the PostgreSQL database using the connection string."""

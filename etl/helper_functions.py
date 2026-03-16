@@ -3,21 +3,6 @@ from typing import LiteralString, Literal
 
 from psycopg.sql import SQL
 
-def add_parameter_to_request_url(request_url: str, parameter_name: str, parameter_value: str) -> str:
-    """Adds a query parameter to the request URL.
-
-    Args:
-        request_url (str): The base request URL.
-        parameter_name (str): The name of the query parameter to add.
-        parameter_value (str): The value of the query parameter to add.
-
-    Returns:
-        str: The updated request URL with the new query parameter.
-    """
-    if not request_url.endswith("&") and not request_url.endswith("?"):
-        request_url += "&"
-    request_url += f"{parameter_name}={parameter_value}"
-    return request_url
 
 def file_to_sql(file_path: Path) -> SQL:
     """Reads the contents of a SQL file and returns it as a psycopg SQL object.
