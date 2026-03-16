@@ -3,7 +3,7 @@ import psycopg as psql
 from pathlib import Path
 from etl.helper_functions import file_to_sql
 from etl.init import init_db
-from etl.extract import extract_station, extract_meteorological_observations,extract_meteorological_observations_to_csv
+from etl.extract import extractor, extract_meteorological_observations
 from postgresql_runner import PostgreSQLRunner
 
 if __name__ == "__main__":
@@ -16,10 +16,9 @@ if __name__ == "__main__":
 
     # Extract data from the API and insert it into the database
     # extract_station(query_runner)
-    # extract_meteorological_observations(query_runner, station_id='06186')
-    extract_meteorological_observations_to_csv(
-        Path('temp_data/meteorological_observations.csv'),
-        station_id='06186', fetch_limit=100000
+    extract_meteorological_observations(
+        Path('temp_data/mo_station_06186.csv'),
+        station_id='06186', limit=5
     )
 
     # transform_station(query_runner)
