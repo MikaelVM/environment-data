@@ -7,7 +7,7 @@ from etl.extract import extractor, extract_meteorological_observations
 from postgresql_runner import PostgreSQLRunner
 
 if __name__ == "__main__":
-    config_file = Path('./local_config.ini')
+    config_file = Path('./configs/local_db_config.ini')
     query_runner = PostgreSQLRunner(config_file, verbose=False)
 
     # Initialize the database by creating the necessary tables
@@ -17,7 +17,7 @@ if __name__ == "__main__":
     # Extract data from the API and insert it into the database
     # extract_station(query_runner)
     extract_meteorological_observations(
-        Path('temp_data/mo_station_06186.csv'),
+        Path('./api_data/mo_station_06186.csv'),
         station_id='06186', limit=5
     )
 
