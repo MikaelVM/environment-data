@@ -8,7 +8,14 @@ class Extractor:
     def __init__(self, api_fetcher: APIFetcher):
         self.api_fetcher = api_fetcher
 
-    def extract_to_csv(self, file_path: Path, *, api_params: dict[str, Any], limit: int = None, fetch_limit: int = None) -> None:
+    def extract_to_csv(
+            self,
+            file_path: Path,
+            *,
+            api_params: dict[str, Any],
+            limit: int = None,
+            fetch_limit: int = None
+    ) -> None:
         """Extracts data from the API and saves it to a CSV file.
 
         Args:
