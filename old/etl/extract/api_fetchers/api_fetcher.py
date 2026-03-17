@@ -32,6 +32,10 @@ class APIFetcher(ABC):
     def _get_result_as_json(self, params: dict[Any, Any] = None) -> dict[str, Any] | None:
         response = httpx.get(self.request_url, params=params, timeout=self.api_timeout)
 
+        if response.status_code != 200:
+            print(f"Error: API request to {self.request_url} failed with status code {response.status_code} with params {params} and response content: {response.text}")
+            return None
+
         return response.json() if response and response.status_code == 200 else None
 
     @abstractmethod

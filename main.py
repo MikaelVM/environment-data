@@ -1,25 +1,56 @@
-from etl.extract.api_fetchers import fetch_stations
-import psycopg as psql
 from pathlib import Path
-from etl.helper_functions import file_to_sql
-from etl.init import init_db
-from etl.extract import extractor, extract_meteorological_observations
-from postgresql_runner import PostgreSQLRunner
+from etl import DatabaseHandler, APIFetcher
+
+import pandas as pd
+
+def init():
+    config_file = Path('./configs/local_db_config.ini')
+    db_handler = DatabaseHandler(config_file)
+
+def extract():
+    api_fetcher = APIFetcher()
+    csv_folder = Path('./api_data')
+
+    # Request URL for DMI Station API
+    dmi_station_api_request_url = 'https://opendataapi.dmi.dk/v2/metObs/collections/station/items'
+    station_json_response = api_fetcher.fetch(dmi_station_api_request_url).json()
+
+    # Using pandas to take response as json, normalize it and convert to dataframe, then save it as csv file
+    station_data = pd.json_normalize(station_json_response['features'])
+    station_data.to_csv(csv_folder / 'station_data.csv', index=False)
+
+    # Request URL for DMI Meteorological Observations API
+    dmi_mo_api_request_url = 'https://opendataapi.dmi.dk/v2/metObs/collections/observation/items'
+    fetch_limit = 1000
+
+    # Loop to fetch data in batches and save to CSV file until no more data is returned
+    offset = 0
+    while True:
+        mo_json_response = api_fetcher.fetch(dmi_mo_api_request_url, api_parameters={'limit': fetch_limit, 'offset': offset}).json()
+        mo_data = pd.json_normalize(mo_json_response['features'])
+        if mo_data.empty:
+            break
+        mo_data.to_csv(csv_folder / 'meteorological_observations_data.csv', mode='a', index=False, header=not (csv_folder / 'meteorological_observations_data.csv').exists())
+        offset += fetch_limit
+
+def transform():
+    pass
+
+def load():
+    pass
 
 if __name__ == "__main__":
-    config_file = Path('./configs/local_db_config.ini')
-    query_runner = PostgreSQLRunner(config_file, verbose=False)
+    print(f"{'='*20} Starting ETL Process {'='*20}")
+    print(f"{'='*20} Initializing the Database{'='*20}")
+    init()
 
-    # Initialize the database by creating the necessary tables
-    # Also, drops existing tables if they exist to ensure a clean slate for demonstration purposes
-    init_db(query_runner, verbose=False)
+    print(f"{'='*20} Extracting data...{'='*20}")
+    extract()
 
-    # Extract data from the API and insert it into the database
-    # extract_station(query_runner)
-    extract_meteorological_observations(
-        Path('./api_data/mo_station_06186.csv'),
-        station_id='06186', limit=5
-    )
+    print(f"{'='*20} Transforming data...{'='*20}")
+    transform()
 
-    # transform_station(query_runner)
-    # load_station(query_runner)
+    print(f"{'='*20} Loading data into the database...{'='*20}")
+    load()
+
+
