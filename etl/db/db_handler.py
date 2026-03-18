@@ -9,15 +9,15 @@ from psycopg.sql import SQL
 class DatabaseHandler:
     """A class for running SQL queries on a PostgreSQL database."""
 
-    def __init__(self, config_file_path: Path, *, verbose: bool = True) -> None:
+    def __init__(self, config_file_path: Path, *, verbose: bool = False) -> None:
         self.verbose = verbose
         self.connection_string = self._get_connection_string_from_config(config_file_path)
 
-    def run_query(self, query: SQL, values: list[Any] = None) -> bool:
+    def run_query(self, query: SQL | str, values: list[Any] = None) -> bool:
         """Executes a SQL query on the PostgreSQL database.
 
         Args:
-            query (SQL): The SQL query to be executed.
+            query (SQL | str): The SQL query to be executed, either as a psycopg SQL object or a regular string.
             values (list[Any], optional): A list of values to be passed to the query. Defaults to None.
 
         Returns:
@@ -25,6 +25,9 @@ class DatabaseHandler:
         """
         connection = self._get_postgres_connection()
         try:
+            if isinstance(query, str):
+                query = SQL(query)
+
             print(f"Running query: \n" + '-' * 50 +
                   f"\n{query.as_string(connection)}\n") if self.verbose else None
             print('-' * 50) if self.verbose else None

@@ -7,7 +7,6 @@ flake8-docstrings-complete==1.4.1
 flake8_import_order==0.19.2
 
 # API
-requests
 httpx
 
 # PostgreSQL database adapter for Python
