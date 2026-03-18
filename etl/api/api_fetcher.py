@@ -1,5 +1,3 @@
-from typing import Any
-
 import httpx
 
 class APIFetcher:
@@ -25,5 +23,3 @@ class APIFetcher:
             ) if self.verbose else None
 
         return response
-
-
